@@ -51,7 +51,7 @@
     --bg-main: #0a1026;
     --bg-panel: rgba(10, 16, 38, 0.96);
     --bg-card: linear-gradient(145deg, rgba(20,34,84,0.4), rgba(10,16,38,0.2));
-    --bg-input: rgba(10,16,38,0.6);
+    --bg-input: rgba(10, 16, 38, 0.6);
     --text-main: #fefcf7;
     --text-muted: rgba(254,252,247,0.65);
     --border-color: rgba(254,252,247,0.08);
@@ -85,7 +85,7 @@
   .brand { 
     display: flex; align-items: center; gap: 8px; 
     flex-shrink: 1; 
-    min-width: 0; /* Important for flex shrink */
+    min-width: 0; 
   }
   
   .brand-shield {
@@ -113,7 +113,6 @@
     display: block;
   }
 
-  /* Auto-hide subtext on very small screens to fit buttons */
   @media (max-width: 380px) {
     .brand-text .sub { display: none; }
     .brand { gap: 6px; }
@@ -141,7 +140,7 @@
   .hamburger span { width: 18px; height: 2px; background: var(--gold-500); border-radius: 2px; }
 
   /* ==========================================================
-     ISOLATED VISUAL EFFECTS (PREVENT OVERFLOW)
+     ISOLATED VISUAL EFFECTS
      ========================================================== */
   .visual-wrapper {
     position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; width: 100%;
@@ -187,7 +186,9 @@
   .calc-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
   .calc-form-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
   .field label { display: block; font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; text-transform: uppercase; }
-  .field input { width: 100%; padding: 12px; background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 8px; font-size: 15px; font-weight: 600; text-transform: uppercase; }
+  .field input, .field select { width: 100%; padding: 12px; background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 8px; font-size: 15px; font-weight: 600; transition: all 0.3s; }
+  .field input { text-transform: uppercase; }
+  .field input::placeholder { color: var(--text-muted); font-weight: 400; text-transform: none; }
 
   @media (min-width: 768px) {
     .nav { height: 72px; }
@@ -207,7 +208,6 @@
 </head>
 <body data-theme="light">
 
-<!-- Visual Wrapper: Menyekat limpahan skrin oleh Orbs/Particles -->
 <div class="visual-wrapper">
   <div class="glow-orb orb-1"></div>
   <div class="glow-orb orb-2"></div>
@@ -295,8 +295,15 @@
               <label data-i18n="form.address">Alamat</label>
               <input type="text" id="address" placeholder="Cth: Banting" required>
             </div>
+            <div class="field full-width">
+              <label data-i18n="form.receiver">Hantar Sebut Harga Kepada</label>
+              <select id="agentPhone" required>
+                <option value="60166741756">FIRDAUS (016-674 1756)</option>
+                <option value="60176738789">PEJABAT UJ (017-673 8789)</option>
+              </select>
+            </div>
           </div>
-          <button type="submit" class="btn-primary" style="width:100%; margin-top:15px;" data-i18n="form.submit">Hantar Maklumat</button>
+          <button type="submit" class="btn-primary" style="width:100%; margin-top:15px;" data-i18n="form.submit">Dapatkan Sebut Harga</button>
         </form>
       </div>
     </div>
@@ -318,7 +325,6 @@
   const GAS_URL = 'https://script.google.com/macros/s/AKfycbzr47tIcjfKOXP6sXZqavLBrJx1f6cz8sM-kpwDVIqlF3tPklN1jwhRI7_e62x561dZ/exec'; 
 
   const $ = id => document.getElementById(id);
-  const q = s => document.querySelector(s);
   const qa = s => document.querySelectorAll(s);
 
   function showPage(pageId) {
@@ -337,8 +343,8 @@
   });
 
   const i18n = {
-    ms: { "nav.home": "Utama", "nav.calc": "Kira Insurans", "hero.eyebrow": "EJEN BERLESEN · 5000+ PELANGGAN", "hero.title": "Renew insurans<br>kenderaan <em>tanpa</em><br>beratur di JPJ.", "hero.desc": "Proses pantas dalam 5 minit, harga telus, dokumen sampai terus ke rumah anda. Bandingkan harga dari 5 syarikat terkemuka.", "hero.btn1": "Semak Harga Percuma", "hero.btn2": "WhatsApp Kami", "calc.title": "Semak <em>Sebut Harga</em>", "calc.desc": "Sebut harga akan dihantar ke WhatsApp anda beserta maklumat terkini.", "tab.car": "🚗 Kereta", "tab.motor": "🏍️ Motosikal", "form.name": "Nama Penuh", "form.plate": "No Plat", "form.model": "Model", "form.ic": "No IC", "form.address": "Alamat", "form.submit": "Dapatkan Sebut Harga", "loading.send": "Menghantar..." },
-    en: { "nav.home": "Home", "nav.calc": "Get Quote", "hero.eyebrow": "LICENSED AGENT · 5000+ CLIENTS", "hero.title": "Renew vehicle<br>insurance <em>without</em><br>queuing at JPJ.", "hero.desc": "Fast 5-minute process, transparent pricing, documents delivered to your door. Compare quotes from 5 providers.", "hero.btn1": "Get Free Quote", "hero.btn2": "WhatsApp Us", "calc.title": "Check Your <em>Quote</em>", "calc.desc": "Your quote and latest info will be sent directly to your WhatsApp.", "tab.car": "🚗 Car", "tab.motor": "🏍️ Motorcycle", "form.name": "Full Name", "form.plate": "Plate No", "form.model": "Model", "form.ic": "IC Number", "form.address": "Address", "form.submit": "Get Quote via WhatsApp", "loading.send": "Sending..." }
+    ms: { "nav.home": "Utama", "nav.calc": "Kira Insurans", "hero.eyebrow": "EJEN BERLESEN · 5000+ PELANGGAN", "hero.title": "Renew insurans<br>kenderaan <em>tanpa</em><br>beratur di JPJ.", "hero.desc": "Proses pantas dalam 5 minit, harga telus, dokumen sampai terus ke rumah anda. Bandingkan harga dari 5 syarikat terkemuka.", "hero.btn1": "Semak Harga Percuma", "hero.btn2": "WhatsApp Kami", "calc.title": "Semak <em>Sebut Harga</em>", "calc.desc": "Sebut harga akan dihantar ke WhatsApp anda beserta maklumat terkini.", "tab.car": "🚗 Kereta", "tab.motor": "🏍️ Motosikal", "form.name": "Nama Penuh", "form.plate": "No Plat", "form.model": "Model", "form.ic": "No IC", "form.address": "Alamat", "form.receiver": "Hantar Sebut Harga Kepada", "form.submit": "Dapatkan Sebut Harga", "loading.send": "Menghantar..." },
+    en: { "nav.home": "Home", "nav.calc": "Get Quote", "hero.eyebrow": "LICENSED AGENT · 5000+ CLIENTS", "hero.title": "Renew vehicle<br>insurance <em>without</em><br>queuing at JPJ.", "hero.desc": "Fast 5-minute process, transparent pricing, documents delivered to your door. Compare quotes from 5 providers.", "hero.btn1": "Get Free Quote", "hero.btn2": "WhatsApp Us", "calc.title": "Check Your <em>Quote</em>", "calc.desc": "Your quote and latest info will be sent directly to your WhatsApp.", "tab.car": "🚗 Car", "tab.motor": "🏍️ Motorcycle", "form.name": "Full Name", "form.plate": "Plate No", "form.model": "Model", "form.ic": "IC Number", "form.address": "Address", "form.receiver": "Send Quote To", "form.submit": "Get Quote via WhatsApp", "loading.send": "Sending..." }
   };
   let currentLang = 'ms';
 
@@ -412,18 +418,19 @@
         plate: $('plateNo').value.trim().toUpperCase(),
         model: $('vehModel').value.trim().toUpperCase(),
         ic: $('icNo').value.trim(),
-        address: $('address').value.trim().toUpperCase()
+        address: $('address').value.trim().toUpperCase(),
+        targetPhone: $('agentPhone').value
       };
-      const msg = `Hi UJ Top Agency, saya nak semak insurans ${d.type==='car'?'Kereta':'Motosikal'}.\n\n👤 *Nama:* ${d.name}\n💎 *No Plat:* ${d.plate}\n🚘 *Model:* ${d.model}\n🪪 *No IC:* ${d.ic}\n🏠 *Alamat:* ${d.address}\n\nMohon sebut harga.`;
+      const msg = `Hi UJ Top Agency, saya nak semak insurans ${d.type==='car'?'Kereta':'Motosikal'}.\n\n👤 *Nama:* ${d.name}\n🚙 *No Plat:* ${d.plate}\n🚘 *Model:* ${d.model}\n🪪 *No IC:* ${d.ic}\n🏠 *Alamat:* ${d.address}\n\nMohon sebut harga.`;
       
-      $( 'fullPageLoader' ).style.display = 'flex';
-      $( 'loadingText' ).innerText = i18n[currentLang]['loading.send'];
+      $('fullPageLoader').style.display = 'flex';
+      $('loadingText').innerText = i18n[currentLang]['loading.send'];
       
       if (GAS_URL.startsWith('http')) {
         fetch(GAS_URL, { method: 'POST', body: JSON.stringify(d) })
-          .finally(() => { window.location.href = `https://wa.me/60166741756?text=${encodeURIComponent(msg)}`; });
+          .finally(() => { window.location.href = `https://wa.me/${d.targetPhone}?text=${encodeURIComponent(msg)}`; });
       } else {
-        setTimeout(() => { window.location.href = `https://wa.me/60166741756?text=${encodeURIComponent(msg)}`; }, 800);
+        setTimeout(() => { window.location.href = `https://wa.me/${d.targetPhone}?text=${encodeURIComponent(msg)}`; }, 800);
       }
     });
   });
