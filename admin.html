@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | UJ Top Agency</title>
+
+  <!-- CSS Framework & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f4f6f8; color: #0a1026; }
+
+    /* Login Page Styling */
+    .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0a1026, #1d2e73); padding: 20px; }
+    .login-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); width: 100%; max-width: 400px; }
+    .btn-gold { background-color: #d4a84b; color: #0a1026; font-weight: 700; border: none; }
+    .btn-gold:hover { background-color: #e6c068; color: #0a1026; }
+    .btn-gold:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* Navbar Styling */
+    .navbar-custom { background-color: #0a1026; padding: 15px 0; }
+    .navbar-brand { color: #d4a84b !important; font-weight: 700; letter-spacing: 1px; }
+
+    /* Table & Dashboard */
+    .card-dashboard { border: none; border-radius: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); overflow: hidden; }
+    .table-custom th { background-color: #f8f9fa; color: #4a5568; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; border-bottom: 2px solid #e2e8f0; }
+    .table-custom td { vertical-align: middle; font-size: 14px; color: #2d3748; }
+    .badge-car { background-color: #ebf4ff; color: #3182ce; padding: 5px 10px; border-radius: 8px; font-weight: 600; font-size: 11px; }
+    .badge-motor { background-color: #fffaf0; color: #dd6b20; padding: 5px 10px; border-radius: 8px; font-weight: 600; font-size: 11px; }
+    .ic-masked { font-family: 'SF Mono', Menlo, monospace; font-size: 12px; color: #718096; letter-spacing: 0.5px; }
+    .ic-reveal-btn { font-size: 10px; color: #3182ce; cursor: pointer; border: none; background: transparent; padding: 0; margin-left: 4px; text-decoration: underline; }
+
+    /* Loading Overlays */
+    #fullPageLoader { position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 9999; display: none; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(4px); }
+    .placeholder-glow .placeholder { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  </style>
+</head>
+<body>
+
+  <!-- =======================================================
+       LOGIN VIEW
+       ======================================================= -->
+  <div id="loginPage" class="login-container">
+    <div class="login-card">
+      <div class="text-center mb-4">
+        <h3 style="color: #0a1026; font-weight: 800;">UJ Top Agency</h3>
+        <p class="text-muted small">Log masuk portal pentadbir</p>
+      </div>
+      <form id="loginForm" autocomplete="on">
+        <div class="mb-3">
+          <label class="form-label small fw-bold" for="username">ID Pengguna</label>
+          <input type="text" id="username" class="form-control" placeholder="admin" required autocomplete="username">
+        </div>
+        <div class="mb-4">
+          <label class="form-label small fw-bold" for="password">Kata Laluan</label>
+          <input type="password" id="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-gold w-100 py-2" id="loginBtn">Log Masuk</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- =======================================================
+       MAIN DASHBOARD VIEW
+       ======================================================= -->
+  <div id="mainApp" class="d-none">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom mb-4">
+      <div class="container-fluid px-4">
+        <a class="navbar-brand" href="#"><i class="fa-solid fa-shield-halved me-2"></i>UJ ADMIN</a>
+        <div class="d-flex align-items-center gap-3">
+          <span class="text-white small d-none d-md-inline" id="displayUser">Admin</span>
+          <button class="btn btn-sm btn-outline-light rounded-pill px-3" id="logoutBtn">
+            <i class="fa-solid fa-right-from-bracket me-2"></i>Keluar
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="container-fluid px-4 pb-5">
+      <div class="d-flex justify-content-between align-items-end mb-3 flex-wrap gap-2">
+        <div>
+          <h4 class="fw-bold mb-1">Senarai Prospek (Leads)</h4>
+          <p class="text-muted small mb-0">Permintaan sebut harga dari laman web. <span class="text-danger">No IC dimask atas keperluan PDPA.</span></p>
+        </div>
+        <button class="btn btn-gold btn-sm rounded-pill px-3" id="refreshBtn">
+          <i class="fa-solid fa-rotate-right me-1"></i> Segar Semula
+        </button>
+      </div>
+
+      <div class="card card-dashboard">
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-custom table-hover mb-0">
+              <thead>
+                <tr>
+                  <th class="ps-4">Tarikh & Masa</th>
+                  <th>Jenis</th>
+                  <th>Nama Pelanggan</th>
+                  <th>No Telefon</th>
+                  <th>No Plat</th>
+                  <th>Model Kenderaan</th>
+                  <th>IC (Masked)</th>
+                  <th>Alamat</th>
+                  <th class="text-center pe-4">Tindakan</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody">
+                <!-- Data akan dirender di sini -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FULL PAGE LOADER -->
+  <div id="fullPageLoader">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
+    <p class="mt-3 fw-bold text-muted" id="loaderText">Sila Tunggu...</p>
+  </div>
+
+  <!-- =======================================================
+       JAVASCRIPT (IIFE WRAPPED)
+       ======================================================= -->
+  <script>
+  (function () {
+    'use strict';
+
+    // ============================================================
+    // CONFIG — sila ganti dengan URL deployment GAS Adib
+    // ============================================================
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbzr47tIcjfKOXP6sXZqavLBrJx1f6cz8sM-kpwDVIqlF3tPklN1jwhRI7_e62x561dZ/exec';
+    const SESSION_KEY = 'uj_admin_session';
+
+    // ============================================================
+    // STATE
+    // ============================================================
+    let sessionToken = null;
+    let currentUser = null;
+    let dbLeads = [];
+    let isLoading = false;
+
+    // ============================================================
+    // HELPERS
+    // ============================================================
+    function $(id) { return document.getElementById(id); }
+
+    function escapeHTML(str) {
+      if (str == null) return '';
+      const div = document.createElement('div');
+      div.appendChild(document.createTextNode(String(str)));
+      return div.innerHTML;
+    }
+
+    /**
+     * Mask Malaysian IC: 900101-01-1234 → 900101-XX-XXXX
+     * Cuma tunjukkan tarikh lahir, sembunyikan kod kelahiran + serial.
+     */
+    function maskIC(ic) {
+      const s = String(ic || '').trim();
+      if (!s || s === '-') return '-';
+      // Match formatted IC: 6 digit - 2 digit - 4 digit (with optional dashes)
+      const m = s.match(/^(\d{6})[-\s]?(\d{2})[-\s]?(\d{4})$/);
+      if (m) return m[1] + '-XX-XXXX';
+      // Fallback: mask everything past first 6 chars
+      if (s.length > 6) return s.substring(0, 6) + s.substring(6).replace(/./g, 'X');
+      return s;
+    }
+
+    /**
+     * Normalize Malaysian phone untuk wa.me (60XXXXXXXXX, no leading 0).
+     */
+    function normalizeMyPhone(p) {
+      const d = String(p || '').replace(/\D/g, '');
+      if (!d) return '';
+      if (d.startsWith('60')) return d;
+      if (d.startsWith('0'))  return '60' + d.substring(1);
+      return '60' + d;
+    }
+
+    /**
+     * Format phone untuk display: 60123456789 → 012-345 6789
+     */
+    function formatPhoneDisplay(p) {
+      let d = String(p || '').replace(/\D/g, '');
+      if (d.startsWith('60')) d = '0' + d.substring(2);
+      if (d.length <= 3) return d;
+      if (d.length <= 7) return d.substring(0, 3) + '-' + d.substring(3);
+      return d.substring(0, 3) + '-' + d.substring(3, 7) + ' ' + d.substring(7);
+    }
+
+    function showFullPageLoading(msg) {
+      const l = $('fullPageLoader');
+      if (l) {
+        if (msg) $('loaderText').innerText = msg;
+        l.style.display = 'flex';
+      }
+    }
+
+    function hideFullPageLoading() {
+      const l = $('fullPageLoader');
+      if (l) l.style.display = 'none';
+    }
+
+    function showSectionLoading(containerId) {
+      const container = $(containerId);
+      if (!container) return;
+      let skeleton = '';
+      for (let i = 0; i < 4; i++) {
+        skeleton += '<tr>' +
+          '<td class="ps-4"><span class="placeholder-glow"><span class="placeholder col-8 rounded"></span></span></td>' +
+          '<td><span class="placeholder-glow"><span class="placeholder col-6 rounded"></span></span></td>' +
+          '<td><span class="placeholder-glow"><span class="placeholder col-10 rounded"></span></span></td>' +
+          '<td><span class="placeholder-glow"><span class="placeholder col-8 rounded"></span></span></td>' +
+          '<td><span class="placeholder-glow"><span class="placeholder col-6 rounded"></span></span></td>' +
+          '<td><span class="placeholder-glow"><span class="placeholder col-10 rounded"></span></span></td>' +
+          '<td><span class="placeholder-glow"><span class="placeholder col-8 rounded"></span></span></td>' +
+          '<td><span class="placeholder-glow"><span class="placeholder col-12 rounded"></span></span></td>' +
+          '<td class="pe-4"><span class="placeholder-glow"><span class="placeholder col-8 rounded"></span></span></td>' +
+          '</tr>';
+      }
+      container.innerHTML = skeleton;
+    }
+
+    /**
+     * Call GAS API via fetch.
+     * NOTA: Sengaja TIDAK set Content-Type — guna default text/plain
+     * supaya elak CORS preflight (GAS tak handle OPTIONS).
+     */
+    async function gasCall(action, payload) {
+      payload = payload || {};
+      payload.action = action;
+
+      const res = await fetch(GAS_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        redirect: 'follow'
+      });
+
+      if (!res.ok) {
+        throw new Error('Network error: ' + res.status);
+      }
+
+      return res.json();
+    }
+
+    function handleSessionExpired(res) {
+      if (res && res.sessionExpired) {
+        clearSession();
+        Swal.fire('Sesi Tamat', 'Sila log masuk semula.', 'warning');
+        return true;
+      }
+      return false;
+    }
+
+    // ============================================================
+    // SESSION PERSISTENCE (sessionStorage — clear bila tab tutup)
+    // ============================================================
+    function saveSession() {
+      try {
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify({
+          token: sessionToken,
+          user: currentUser
+        }));
+      } catch (e) { /* storage unavailable, ignore */ }
+    }
+
+    function loadSession() {
+      try {
+        const raw = sessionStorage.getItem(SESSION_KEY);
+        if (!raw) return false;
+        const s = JSON.parse(raw);
+        if (s && s.token && s.user) {
+          sessionToken = s.token;
+          currentUser = s.user;
+          return true;
+        }
+      } catch (e) { /* corrupted, ignore */ }
+      return false;
+    }
+
+    function clearSession() {
+      sessionToken = null;
+      currentUser = null;
+      dbLeads = [];
+      try { sessionStorage.removeItem(SESSION_KEY); } catch (e) {}
+      renderAuthState();
+    }
+
+    // ============================================================
+    // VIEW STATE
+    // ============================================================
+    function renderAuthState() {
+      const loginPage = $('loginPage');
+      const mainApp = $('mainApp');
+
+      if (sessionToken && currentUser) {
+        loginPage.classList.add('d-none');
+        mainApp.classList.remove('d-none');
+        $('displayUser').innerText = currentUser.fullname || currentUser.username;
+        loadLeads();
+      } else {
+        mainApp.classList.add('d-none');
+        loginPage.classList.remove('d-none');
+      }
+    }
+
+    // ============================================================
+    // AUTH
+    // ============================================================
+    async function handleLogin() {
+      if (isLoading) return;
+      const u = $('username').value.trim();
+      const p = $('password').value.trim();
+      if (!u || !p) {
+        return Swal.fire('Ralat', 'Sila isi ID dan Kata Laluan.', 'warning');
+      }
+
+      isLoading = true;
+      $('loginBtn').disabled = true;
+      showFullPageLoading('Log Masuk...');
+
+      try {
+        const res = await gasCall('login', { username: u, password: p });
+        hideFullPageLoading();
+        if (res && res.success) {
+          sessionToken = res.token;
+          currentUser = res.user;
+          $('password').value = '';
+          saveSession();
+          renderAuthState();
+        } else {
+          Swal.fire('Gagal', (res && res.message) || 'Login gagal.', 'error');
+        }
+      } catch (err) {
+        hideFullPageLoading();
+        Swal.fire('Ralat', 'Tidak dapat menyambung ke server. Sila cuba lagi.', 'error');
+        console.error(err);
+      } finally {
+        isLoading = false;
+        $('loginBtn').disabled = false;
+      }
+    }
+
+    async function handleLogout() {
+      // Best-effort: invalidate server-side token, tapi jangan tunggu
+      if (sessionToken) {
+        gasCall('logout', { token: sessionToken }).catch(() => {});
+      }
+      clearSession();
+    }
+
+    // ============================================================
+    // DATA LOADING
+    // ============================================================
+    async function loadLeads() {
+      if (!sessionToken) { clearSession(); return; }
+      showSectionLoading('tableBody');
+
+      try {
+        const res = await gasCall('getLeads', { token: sessionToken });
+        if (handleSessionExpired(res)) return;
+        if (res && res.success) {
+          dbLeads = res.data || [];
+          renderTable();
+        } else {
+          Swal.fire('Ralat', (res && res.message) || 'Gagal memuat data.', 'error');
+          $('tableBody').innerHTML = '<tr><td colspan="9" class="text-center text-danger py-4">Gagal memuat data.</td></tr>';
+        }
+      } catch (err) {
+        console.error(err);
+        $('tableBody').innerHTML = '<tr><td colspan="9" class="text-center text-danger py-4">Gagal menyambung ke server.</td></tr>';
+      }
+    }
+
+    // ============================================================
+    // RENDER TABLE
+    // ============================================================
+    function renderTable() {
+      const tbody = $('tableBody');
+      if (!dbLeads.length) {
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center py-5 text-muted">Belum ada prospek.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = ''; // clear
+
+      dbLeads.forEach(function (item) {
+        const badge = item.jenis === 'Kereta' ? 'badge-car' : 'badge-motor';
+        const phoneDisplay = formatPhoneDisplay(item.phone);
+        const phoneNormalized = normalizeMyPhone(item.phone);
+        const icMasked = maskIC(item.ic);
+
+        const tr = document.createElement('tr');
+        tr.innerHTML =
+          '<td class="ps-4 fw-medium">' + escapeHTML(item.timestamp) + '</td>' +
+          '<td><span class="' + badge + '">' + escapeHTML(item.jenis) + '</span></td>' +
+          '<td class="fw-bold">' + escapeHTML(item.nama) + '</td>' +
+          '<td>' + (phoneDisplay ? escapeHTML(phoneDisplay) : '<span class="text-muted small">—</span>') + '</td>' +
+          '<td class="fw-bold">' + escapeHTML(item.plat) + '</td>' +
+          '<td>' + escapeHTML(item.model) + '</td>' +
+          '<td><span class="ic-masked">' + escapeHTML(icMasked) + '</span>' +
+            '<button class="ic-reveal-btn" data-action="reveal-ic" data-ic="' + escapeHTML(item.ic) + '">lihat</button></td>' +
+          '<td><span class="d-inline-block text-truncate" style="max-width: 150px;" title="' + escapeHTML(item.alamat) + '">' + escapeHTML(item.alamat) + '</span></td>' +
+          '<td class="text-center pe-4">' +
+            (phoneNormalized
+              ? '<button class="btn btn-sm btn-success rounded-pill px-3" data-action="wa" data-phone="' + escapeHTML(phoneNormalized) + '" data-name="' + escapeHTML(item.nama) + '" data-plate="' + escapeHTML(item.plat) + '"><i class="fa-brands fa-whatsapp me-1"></i> WhatsApp</button>'
+              : '<span class="text-muted small">No phone</span>'
+            ) +
+          '</td>';
+        tbody.appendChild(tr);
+      });
+
+      // Bind action buttons (event delegation done at table level — see init)
+    }
+
+    // ============================================================
+    // TABLE ACTION HANDLER (event delegation)
+    // ============================================================
+    function handleTableClick(e) {
+      const btn = e.target.closest('[data-action]');
+      if (!btn) return;
+      const action = btn.getAttribute('data-action');
+
+      if (action === 'wa') {
+        const phone = btn.getAttribute('data-phone');
+        const name  = btn.getAttribute('data-name');
+        const plate = btn.getAttribute('data-plate');
+        const msg = 'Hi ' + name + ', ini UJ Top Agency. Berkenaan permohonan sebut harga insurans kenderaan anda (' + plate + ')...';
+        const url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
+        window.open(url, '_blank', 'noopener,noreferrer');
+      } else if (action === 'reveal-ic') {
+        const ic = btn.getAttribute('data-ic');
+        Swal.fire({
+          title: 'No IC Penuh',
+          html: '<p class="mb-2 small text-muted">Hanya untuk verifikasi. Jangan kongsi.</p>' +
+                '<div style="font-family:monospace; font-size:18px; font-weight:700; letter-spacing:1px;">' + escapeHTML(ic) + '</div>',
+          confirmButtonText: 'Tutup',
+          confirmButtonColor: '#0a1026'
+        });
+      }
+    }
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', function () {
+      // Login form: fix Enter key bug — listen pada submit, BUKAN button click
+      $('loginForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        handleLogin();
+      });
+
+      // Logout & refresh
+      $('logoutBtn').addEventListener('click', handleLogout);
+      $('refreshBtn').addEventListener('click', loadLeads);
+
+      // Table action delegation (WhatsApp, reveal IC)
+      $('tableBody').addEventListener('click', handleTableClick);
+
+      // Restore session kalau tab refresh tapi belum tutup
+      if (loadSession()) {
+        renderAuthState();
+      } else {
+        renderAuthState();
+      }
+    });
+
+  })();
+  </script>
+</body>
+</html>
