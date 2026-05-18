@@ -51,6 +51,22 @@
     --border-color: rgba(254, 252, 247, 0.08);
     --border-highlight: rgba(212, 168, 75, 0.3);
 
+    /* Type scale — Fraunces (display) + Plus Jakarta (body) */
+    --type-display-xl: clamp(2.4rem, 9vw, 4.5rem);   /* Hero — 38→72px */
+    --type-display-lg: clamp(1.8rem, 5.5vw, 2.75rem); /* Section — 29→44px */
+    --type-body-lg:    clamp(15px, 1.6vw, 17px);     /* Lead paragraph */
+    --type-eyebrow:    11px;
+
+    --lead-tight: 1.04;
+    --lead-snug: 1.1;
+    --lead-normal: 1.5;
+    --lead-relaxed: 1.6;
+
+    --track-tight: -0.018em;
+    --track-tightish: -0.012em;
+    --track-wide: 0.04em;
+    --track-wider: 0.08em;
+
     --radius-lg: 22px;
     --ease: cubic-bezier(0.22, 1, 0.36, 1);
     --pad-x: clamp(12px, 4vw, 96px);
@@ -107,24 +123,28 @@
     clip-path: polygon(50% 0, 100% 18%, 100% 70%, 50% 100%, 0 70%, 0 18%);
     display: flex; align-items: center; justify-content: center;
     font-family: 'Fraunces', serif; font-weight: 800; color: #0a1026;
-    font-size: 12px; box-shadow: 0 4px 8px rgba(212, 168, 75, 0.2);
+    font-size: 12px;
+    font-variation-settings: 'opsz' 14;
+    box-shadow: 0 4px 8px rgba(212, 168, 75, 0.2);
   }
 
   .brand-text { line-height: 1.1; min-width: 0; overflow: hidden; }
   .brand-text .main {
     font-family: 'Fraunces', serif;
     font-weight: 700;
-    font-size: clamp(11px, 3.5vw, 15px);
+    font-size: clamp(12px, 3.5vw, 15px);
+    font-variation-settings: 'opsz' 14;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
   .brand-text .sub {
-    font-size: 7.5px;
+    font-size: 10px;
     color: var(--gold-500);
     text-transform: uppercase;
     white-space: nowrap;
     display: block;
-    letter-spacing: 0.4px;
+    letter-spacing: 0.6px;
+    font-weight: 700;
   }
 
   @media (max-width: 380px) {
@@ -201,28 +221,53 @@
   .hero-content {
     position: relative; z-index: 2;
     width: 100%; max-width: 1200px; margin: 0 auto;
-    display: flex; flex-direction: column; gap: 20px;
+    display: flex; flex-direction: column;
+    gap: clamp(20px, 3vw, 28px);
   }
 
-  h1.hero-title {
+  h1.hero-title, h2.display-section {
     font-family: 'Fraunces', serif;
-    font-size: clamp(1.8rem, 8vw, 3rem);
-    line-height: 1.1;
     font-weight: 400;
-    letter-spacing: -0.01em;
+    color: var(--text-main);
   }
-  h1.hero-title em {
+  h1.hero-title {
+    font-size: var(--type-display-xl);
+    line-height: var(--lead-tight);
+    letter-spacing: var(--track-tight);
+    font-variation-settings: 'opsz' 144;
+  }
+  h2.display-section {
+    font-size: var(--type-display-lg);
+    line-height: var(--lead-snug);
+    letter-spacing: var(--track-tightish);
+    font-variation-settings: 'opsz' 96;
+  }
+  h1.hero-title em, h2.display-section em {
     font-style: italic;
     background: linear-gradient(120deg, var(--gold-500), var(--gold-400));
     -webkit-background-clip: text;
     color: transparent;
-    font-weight: 600;
+    font-weight: 500;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: var(--type-eyebrow);
+    font-weight: 800;
+    border: 1px solid var(--gold-400);
+    padding: 5px 12px;
+    border-radius: 20px;
+    color: var(--gold-500);
+    background: var(--bg-elevated);
+    letter-spacing: var(--track-wider);
+    text-transform: uppercase;
   }
 
   .hero-desc {
-    font-size: 15px;
+    font-size: var(--type-body-lg);
+    line-height: var(--lead-relaxed);
     color: var(--text-muted);
-    max-width: 450px;
+    max-width: 50ch;
   }
   .hero-ctas {
     display: flex;
@@ -402,7 +447,7 @@
   <section class="hero">
     <div class="hero-content">
       <div class="reveal-up">
-        <span style="font-size:9px; font-weight:800; border:1px solid var(--gold-400); padding:3px 8px; border-radius:20px; color:var(--gold-500); background: var(--bg-elevated); letter-spacing: 0.4px;" data-i18n="hero.eyebrow">EJEN BERLESEN · 5000+ PELANGGAN</span>
+        <span class="eyebrow" data-i18n="hero.eyebrow">EJEN BERLESEN · 5000+ PELANGGAN</span>
       </div>
       <h1 class="hero-title reveal-up" style="transition-delay: 50ms;" data-i18n="hero.title">
         Renew insurans<br>kenderaan <em>tanpa</em><br>beratur di JPJ.
@@ -422,8 +467,8 @@
 <div id="page-calculator" class="page-view">
   <section class="calc-section" style="padding-top: 80px; min-height: 80vh;">
     <div class="text-center mb-4 reveal-up" style="text-align:center;">
-      <h2 class="hero-title" style="font-size: 1.6rem" data-i18n="calc.title">Semak <em>Sebut Harga</em></h2>
-      <p class="hero-desc" style="margin:12px auto 0; font-size: 14px;" data-i18n="calc.desc">Sebut harga akan dihantar ke WhatsApp anda beserta maklumat terkini.</p>
+      <h2 class="display-section" data-i18n="calc.title">Semak <em>Sebut Harga</em></h2>
+      <p class="hero-desc" style="margin:14px auto 0; max-width: 52ch;" data-i18n="calc.desc">Sebut harga akan dihantar ke WhatsApp anda beserta maklumat terkini.</p>
     </div>
 
     <div class="calc-wrap" style="max-width: 720px; margin: 24px auto 0;">
@@ -477,7 +522,7 @@
           </div>
           <button type="submit" class="btn-primary" style="width:100%; margin-top:18px;" data-i18n="form.submit">Dapatkan Sebut Harga</button>
 
-          <p style="font-size:10px; color:var(--text-muted); margin-top:14px; text-align:center;" data-i18n="form.privacy">
+          <p style="font-size:11px; color:var(--text-muted); margin-top:14px; text-align:center; line-height: 1.55;" data-i18n="form.privacy">
             Maklumat anda dirahsiakan dan hanya digunakan untuk pemprosesan sebut harga insurans.
           </p>
         </form>
@@ -486,7 +531,7 @@
   </section>
 </div>
 
-<footer style="text-align:center; padding: 20px; font-size:10px; color:var(--text-muted); border-top:1px solid var(--border-color); position: relative; z-index: 2;">
+<footer style="text-align:center; padding: 24px 20px; font-size:11px; color:var(--text-muted); border-top:1px solid var(--border-color); position: relative; z-index: 2; letter-spacing: 0.02em;">
   © 2026 UJ Top Agency. Banting, Selangor.
 </footer>
 
