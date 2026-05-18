@@ -4,13 +4,52 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#0a1026" />
-<title>UJ Top Agency — Renew Insurans Pantas</title>
-<meta name="description" content="Perkhidmatan renew insurans kenderaan online. Pantas, mesra, dan mudah bersama UJ Top Agency, Banting." />
+
+<!-- ============================================================
+     SEO BASICS
+     IMPORTANT: tukar URL placeholder ke domain sebenar selepas deploy
+     ============================================================ -->
+<title>UJ Top Agency — Renew Insurans Kenderaan Online | Banting, Selangor</title>
+<meta name="description" content="Renew insurans kenderaan online dengan UJ Top Agency. Proses 5 minit, harga telus, dokumen sampai ke rumah. Ejen berlesen di Banting, Selangor." />
+<meta name="keywords" content="insurans kenderaan, renew insurans, road tax online, insurans kereta Malaysia, insurans motor Malaysia, ejen insurans Banting, UJ Top Agency" />
+<meta name="author" content="UJ Top Agency" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="https://your-username.github.io/uj-top-agency/" />
+
+<!-- ============================================================
+     OPEN GRAPH (Facebook, WhatsApp, LinkedIn preview)
+     ============================================================ -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="UJ Top Agency" />
+<meta property="og:locale" content="ms_MY" />
+<meta property="og:locale:alternate" content="en_MY" />
+<meta property="og:url" content="https://your-username.github.io/uj-top-agency/" />
+<meta property="og:title" content="UJ Top Agency — Renew Insurans Tanpa Beratur" />
+<meta property="og:description" content="Proses pantas dalam 5 minit, harga telus, dokumen sampai ke rumah. Bandingkan harga dari 5 syarikat terkemuka." />
+<meta property="og:image" content="https://your-username.github.io/uj-top-agency/og-cover.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="UJ Top Agency — perkhidmatan renew insurans kenderaan online" />
+
+<!-- ============================================================
+     TWITTER CARD
+     ============================================================ -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="UJ Top Agency — Renew Insurans Tanpa Beratur" />
+<meta name="twitter:description" content="Proses pantas 5 minit. Harga telus. Ejen berlesen di Banting, Selangor." />
+<meta name="twitter:image" content="https://your-username.github.io/uj-top-agency/og-cover.jpg" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- ============================================================
+     ANALYTICS — Umami Cloud (cookieless, PDPA-safe)
+     SETUP: daftar di https://cloud.umami.is, dapatkan Website ID,
+     gantikan YOUR_WEBSITE_ID_HERE di bawah.
+     ============================================================ -->
+<script defer src="https://cloud.umami.is/script.js" data-website-id="93e5a3f0-a331-4a58-9e48-e86d2d162ca8"></script>
 
 <style>
   /* ==========================================================
@@ -409,6 +448,50 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 </style>
+
+<!-- ============================================================
+     STRUCTURED DATA — Schema.org InsuranceAgency (Google rich result)
+     IMPORTANT: tukar alamat & koordinat ke lokasi sebenar
+     ============================================================ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "InsuranceAgency",
+  "name": "UJ Top Agency",
+  "image": "https://your-username.github.io/uj-top-agency/og-cover.jpg",
+  "url": "https://your-username.github.io/uj-top-agency/",
+  "telephone": "+60166741756",
+  "priceRange": "RM",
+  "description": "Perkhidmatan renew insurans kenderaan online untuk kereta dan motosikal.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Banting",
+    "addressRegion": "Selangor",
+    "postalCode": "42700",
+    "addressCountry": "MY"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 2.8127,
+    "longitude": 101.5089
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "opens": "09:00",
+      "closes": "18:00"
+    }
+  ],
+  "areaServed": {
+    "@type": "Country",
+    "name": "Malaysia"
+  },
+  "sameAs": [
+    "https://wa.me/60166741756"
+  ]
+}
+</script>
 </head>
 <body data-theme="dark">
 
@@ -550,6 +633,18 @@
   const GAS_URL = 'https://script.google.com/macros/s/AKfycbzr47tIcjfKOXP6sXZqavLBrJx1f6cz8sM-kpwDVIqlF3tPklN1jwhRI7_e62x561dZ/exec';
   const SUBMIT_TIMEOUT_MS = 2500;
   const THEME_KEY = 'uj_theme';
+
+  // ============================================================
+  // ANALYTICS — safe wrapper (tak crash kalau Umami blocked oleh adblock)
+  // ============================================================
+  function track(eventName, eventData) {
+    try {
+      if (window.umami && typeof window.umami.track === 'function') {
+        if (eventData) window.umami.track(eventName, eventData);
+        else window.umami.track(eventName);
+      }
+    } catch (e) { /* silent */ }
+  }
 
   // ============================================================
   // HELPERS
@@ -743,8 +838,14 @@
     qa('[data-page]').forEach(el => {
       el.addEventListener('click', e => {
         e.preventDefault();
+        track('nav_click', { target: el.getAttribute('data-page') });
         showPage(el.getAttribute('data-page'));
       });
+    });
+
+    // Track hero WhatsApp click (lead source signal)
+    qa('a[href*="wa.me"]').forEach(el => {
+      el.addEventListener('click', () => track('whatsapp_hero'));
     });
 
     // Hamburger
@@ -834,6 +935,13 @@
 
       $('fullPageLoader').style.display = 'flex';
       $('loadingText').innerText = i18n[currentLang]['loading.send'];
+
+      // === ANALYTICS: lead conversion event ===
+      track('quote_submit', {
+        vehicle: payload.type,
+        agent: targetPhone.endsWith('1756') ? 'firdaus' : 'office',
+        lang: currentLang
+      });
 
       let redirected = false;
       const redirect = () => {
